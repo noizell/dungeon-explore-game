@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef185b7949c496840b1f01a991f7eb12, type: 3}
+  m_Name: Core Installer
+  m_EditorClassIdentifier: 
+  _transitionList:
+  - TransitionName: Left
+    TransitionActivator: {fileID: 6987735985680408624, guid: f7f9b06d7f3b1ff44ba72522d43f67a8, type: 3}
+  - TransitionName: Reverse Left
+    TransitionActivator: {fileID: 5348694143405427217, guid: 1b2661296ddb97043b02fb1e54631b66, type: 3}
+  - TransitionName: Right
+    TransitionActivator: {fileID: 3577799323507596814, guid: 631b878aaec954d4eb511fb292c2b5f0, type: 3}
+  - TransitionName: Reverse Right
+    TransitionActivator: {fileID: 6810388172642197238, guid: f3428d42f160b2b4e849e5afe2bb19c7, type: 3}
+  - TransitionName: Loading Simple
+    TransitionActivator: {fileID: 4500292886182116479, guid: bc736dde9402e434294346c1cef18aba, type: 3}
