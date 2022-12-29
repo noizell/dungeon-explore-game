@@ -3,11 +3,10 @@ using Zenject;
 using NPP.DE.Misc;
 using NPP.DE.Ui;
 using NPP.DE.Init;
-using NPP.DE.Core.Services;
-using NPP.DE.Animations;
 
 namespace NPP.DE.Installer
 {
+
     [CreateAssetMenu(fileName = "Core Installer", menuName = "NPP/DE/Create new Core Installer")]
     public class CoreInstaller : ScriptableObjectInstaller
     {

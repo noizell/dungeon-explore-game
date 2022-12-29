@@ -11,11 +11,19 @@ namespace NPP.DE.Misc
         private System.Action _onComplete;
         private System.Action _onUnloadComplete;
 
-        public void LoadScene(string name, System.Action onCompleteCallback = null, LoadSceneMode loadMode = LoadSceneMode.Single, bool setLoadedActive = true)
+        public void LoadScene(string name, System.Action onCompleteCallback = null, LoadSceneMode loadMode = LoadSceneMode.Single, bool setLoadedActive = true, bool bypassSceneLimit = false)
         {
             _allowActive = setLoadedActive;
             _currentLoadedSceneName = name;
             _onComplete = onCompleteCallback;
+
+            if (IsSceneLoaded(name) && !bypassSceneLimit)
+            {
+                SceneManager.SetActiveScene(SceneManager.GetSceneByName(name));
+                _onComplete?.Invoke();
+                return;
+            }
+
             SceneManager.LoadSceneAsync(name, loadMode).completed += OnLoadComplete;
         }
 

@@ -13,6 +13,7 @@ namespace NPP.DE.Ui
         private Canvas _canvas = null;
 
         private AnimationCallbackFactory _animFactory;
+        private SceneLoader _sceneLoader;
 
         public AnimationCallbackFactory AnimationCallbackFactory
         {
@@ -20,7 +21,7 @@ namespace NPP.DE.Ui
             {
                 if (_animFactory == null)
                 {
-                    _animFactory = PersistentServices.Current.Get<AssetLoader>().Load<AnimationCallbackFactory>("Animation Callback Factory","Factory");
+                    _animFactory = PersistentServices.Current.Get<AssetLoader>().Load<AnimationCallbackFactory>("Animation Callback Factory", "Factory");
                 }
 
                 return _animFactory;
@@ -45,38 +46,82 @@ namespace NPP.DE.Ui
         {
             if (_transitions.ContainsKey(name))
             {
-                _canvas = GameObject.FindObjectOfType<Canvas>();
-                Transform _spawned = _canvas.transform.Find($"Transition {name}");
-                TransitionUiActivator _activator = null;
-
-                if (_spawned != null)
+                if (_sceneLoader == null)
                 {
-                    _activator = _spawned.GetComponentInChildren<TransitionUiActivator>();
+                    _sceneLoader = PersistentServices.Current.Get<SceneLoader>();
                 }
 
-                if (_activator == null)
+                if (!_sceneLoader.IsSceneLoaded("Loading"))
                 {
-                    var g = GameObject.Instantiate(_transitions[name], _canvas.transform);
-                    g.gameObject.name = $"Transition {name}";
+                    _sceneLoader.LoadScene("Loading", () =>
+                    {
+                        _canvas = GameObject.FindGameObjectWithTag("Transition Canvas").GetComponent<Canvas>();
+                        Transform _spawned = _canvas.transform.Find($"Transition {name}");
+                        TransitionUiActivator _activator = null;
 
-                    _activator = g;
+                        if (_spawned != null)
+                        {
+                            _activator = _spawned.GetComponentInChildren<TransitionUiActivator>();
+                        }
+
+                        if (_activator == null)
+                        {
+                            var g = GameObject.Instantiate(_transitions[name], _canvas.transform);
+                            g.gameObject.name = $"Transition {name}";
+
+                            _activator = g;
+                        }
+
+                        _activator.PlayTransition(callback);
+                    }, UnityEngine.SceneManagement.LoadSceneMode.Additive, false);
                 }
+                else
+                {
+                    _canvas = GameObject.FindGameObjectWithTag("Transition Canvas").GetComponent<Canvas>();
+                    Transform _spawned = _canvas.transform.Find($"Transition {name}");
+                    TransitionUiActivator _activator = null;
 
-                _activator.PlayTransition(callback);
+                    if (_spawned != null)
+                    {
+                        _activator = _spawned.GetComponentInChildren<TransitionUiActivator>();
+                    }
+
+                    if (_activator == null)
+                    {
+                        var g = GameObject.Instantiate(_transitions[name], _canvas.transform);
+                        g.gameObject.name = $"Transition {name}";
+
+                        _activator = g;
+                    }
+
+                    _activator.PlayTransition(callback);
+                }
             }
         }
 
-        public void DoneTransition(string name)
+        public void DoneTransition(string name, bool unloadScene = false)
         {
-            _canvas = GameObject.FindObjectOfType<Canvas>();
+            _canvas = GameObject.FindGameObjectWithTag("Transition Canvas").GetComponent<Canvas>();
             Transform _spawned = _canvas.transform.Find($"Transition {name}");
             TransitionUiActivator _activator = null;
 
             if (_spawned != null)
             {
                 _activator = _spawned.GetComponentInChildren<TransitionUiActivator>();
-                _activator.DoneTransition();
+                if (unloadScene)
+                    _activator.DoneTransition(UnloadScene);
+                else
+                    _activator.DoneTransition();
             }
+        }
+
+        public void UnloadScene()
+        {
+            if (_sceneLoader.IsSceneLoaded("Loading"))
+            {
+                _sceneLoader.UnloadScene("Loading");
+            }
+
         }
     }
 }
