@@ -18,9 +18,14 @@ namespace NPP.DE.Core.Game
             _counter = counter;
         }
 
-        private void Awake()
+        private void OnEnable()
         {
             Signals.Hub.Get<SignalCollection.AppState.GameLoadedSignal>().AddListener(OnGameLoaded);
+        }
+
+        private void OnDisable()
+        {
+            Signals.Hub.Get<SignalCollection.AppState.GameLoadedSignal>().RemoveListener(OnGameLoaded);
         }
 
         private void OnGameLoaded(GameLoadedParameter obj)

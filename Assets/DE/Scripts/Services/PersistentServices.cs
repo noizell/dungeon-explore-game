@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NPP.DE.Core.Signal;
+using System.Collections.Generic;
 
 namespace NPP.DE.Core.Services
 {

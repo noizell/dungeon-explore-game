@@ -2,7 +2,8 @@
 using NPP.DE.Misc;
 using NPP.DE.Ui;
 using NPP.DE.Core.Services;
-using NPP.DE.Animations;
+using NPP.DE.Core.Signal;
+using NPP.DE.Core.State;
 
 namespace NPP.DE.Init
 {
@@ -20,6 +21,10 @@ namespace NPP.DE.Init
 
         private void LoadMenu()
         {
+            GameState.Initialize();
+
+            GlobalServices.GameStateTransition();
+
             _sceneLoader.LoadScene("Menu", () =>
             {
                 _container.Unbind<Initialization>();
@@ -41,6 +46,7 @@ namespace NPP.DE.Init
         [Inject]
         private void InstallAssetLoader(AssetLoader json)
             => PersistentServices.Current.Register(json);
+
         #endregion
     }
 }

@@ -1,12 +1,12 @@
 ﻿using NPP.DE.Core.Services;
 using NPP.DE.Core.Signal;
+using NPP.DE.Core.State;
 using NPP.DE.Misc;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace NPP.DE.Ui
 {
-
     public class MenuManager : MonoBehaviour
     {
         [SerializeField]
@@ -27,12 +27,35 @@ namespace NPP.DE.Ui
         private TransitionManager _transitionManager;
         private SceneLoader _sceneLoader;
 
+        private void OnEnable()
+        {
+            GameState.States.OnGame += OnGameState;
+            GameState.States.OnMenu += OnMenuState;
+        }
+
+        private void OnDisable()
+        {
+            GameState.States.OnGame -= OnGameState;
+            GameState.States.OnMenu -= OnMenuState;
+        }
+
         private void Start()
         {
             _transitionManager = PersistentServices.Current.Get<TransitionManager>();
             _sceneLoader = PersistentServices.Current.Get<SceneLoader>();
             _startButton.onClick.AddListener(() => StartGame());
             _mainMenuButton.onClick.AddListener(() => ReturnMainMenu());
+        }
+
+        private void OnGameState()
+        {
+            _mainMenuUi.SetActive(false);
+            _gameMenuUi.SetActive(false);
+            _gameUi.SetActive(true);
+        }
+
+        private void OnMenuState()
+        {
             _mainMenuUi.SetActive(true);
             _gameMenuUi.SetActive(false);
             _gameUi.SetActive(false);
@@ -57,9 +80,9 @@ namespace NPP.DE.Ui
                     _transitionManager.DoneTransition("Left");
                     _sceneLoader.LoadScene("Game", () =>
                     {
-                        _transitionManager.DoneTransition("Loading Simple", true);
-                        _mainMenuUi.SetActive(false);
+                        GlobalServices.GameStateTransition();
                         Signals.Hub.Get<SignalCollection.AppState.GameLoadedSignal>().Dispatch(new GameLoadedParameter(this));
+                        _transitionManager.DoneTransition("Loading Simple", true);
                     }, UnityEngine.SceneManagement.LoadSceneMode.Additive);
                 });
             });
@@ -74,13 +97,11 @@ namespace NPP.DE.Ui
                     _transitionManager.DoneTransition("Left");
                     _sceneLoader.LoadScene("Menu", () =>
                     {
+                        GlobalServices.GameStateTransition();
                         _transitionManager.DoneTransition("Loading Simple", true);
-                        _mainMenuUi.SetActive(true);
-
                     }, UnityEngine.SceneManagement.LoadSceneMode.Additive);
                 });
             });
         }
-
     }
 }

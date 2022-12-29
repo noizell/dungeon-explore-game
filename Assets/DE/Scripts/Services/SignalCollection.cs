@@ -25,7 +25,10 @@ namespace NPP.DE.Core.Signal
         {
             public class GameLoadedSignal : ASignal<GameLoadedParameter> { }
 
+            public class GameStateTransitionSignal : ASignal
+            {
 
+            }
         }
     }
 
