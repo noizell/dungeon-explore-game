@@ -238,6 +238,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _clip: {fileID: 7400000, guid: 21fc121f298891f4983516d67f519424, type: 2}
   _animancer: {fileID: 2768413261184255885}
+  _endLoadingClip: {fileID: 7400000, guid: a9646374ff0d62448b8df711ab7ac0c1, type: 2}
   _normalizedTimeStartLoop: 0.6
   _callbackTriggerOnce: 1
 --- !u!114 &6486785664463888304

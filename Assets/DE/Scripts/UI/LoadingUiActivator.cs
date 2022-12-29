@@ -1,11 +1,15 @@
 ﻿using NPP.DE.Animations;
 using NPP.DE.Core.Services;
+using STVR.SimpleDelayer;
 using UnityEngine;
 
 namespace NPP.DE.Ui
 {
     public class LoadingUiActivator : TransitionUiActivator
     {
+        [SerializeField]
+        private AnimationClip _endLoadingClip;
+
         [Tooltip("At what time should animation start looping. set lower than 0 to disable loop.")]
         [SerializeField]
         [Range(-1, 1)] private float _normalizedTimeStartLoop = .1f;
@@ -17,7 +21,7 @@ namespace NPP.DE.Ui
         public override void PlayTransition(System.Action callback = null)
         {
             _animCallback = PersistentServices.Current.Get<TransitionManager>().AnimationCallbackFactory.Create();
-            _animancer.Animator.GetBehaviour<CallbackEvent>().SetOnEnd(_animancer.Animator, _animCallback,
+            _animancer.Animator.GetBehaviour<AnimationEvent>().SetOnEnd(_animancer.Animator, _animCallback,
                 () =>
                 {
                     if (!_callbackCalled)
@@ -34,6 +38,18 @@ namespace NPP.DE.Ui
                         PlayTransition(callback);
                     }
                 });
+        }
+
+        public override void DoneTransition(System.Action unload = null)
+        {
+            _animancer.Stop(_clip);
+            _animancer.Play(_endLoadingClip).Events.OnEnd = () =>
+            {
+                Delay wait = Delay.CreateCount(.2f, () =>
+                {
+                    unload?.Invoke();
+                }, .1f);
+            };
         }
     }
 }

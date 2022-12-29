@@ -10,6 +10,8 @@ namespace NPP.DE.Installer
     {
         public override void InstallBindings()
         {
+            SignalBusInstaller.Install(Container);
+
             Container.Bind<AnimationCallback>().FromIFactory(x=> x.To<AnimationCallbackFactory>().
             FromScriptableObjectResource("Factory/Animation Callback Factory").AsSingle()).AsSingle();
         }

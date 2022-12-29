@@ -27,9 +27,10 @@ namespace NPP.DE.Ui
         /// <summary>
         /// this will deactivate current transition.
         /// </summary>
-        public virtual void DoneTransition()
+        public virtual void DoneTransition(System.Action unload = null)
         {
             _animancer.Stop(_clip);
+            unload?.Invoke();
             //gameObject.SetActive(false);
         }
     }

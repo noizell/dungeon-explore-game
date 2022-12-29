@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public class CallbackEvent : StateMachineBehaviour
+public class AnimationEvent : StateMachineBehaviour
 {
     private AnimationCallback _callback;
 

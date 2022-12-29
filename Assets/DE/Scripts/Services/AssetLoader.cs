@@ -1,9 +1,12 @@
 ﻿using NPP.DE.Core.Services;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using Zenject;
 
 namespace NPP.DE.Misc
 {
+
     public class AssetLoader : IPersistent
     {
         /// <summary>
