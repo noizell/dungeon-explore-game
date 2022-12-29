@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using NPP.DE.Ui;
 using NPP.DE.Core.Services;
+using System;
 
 namespace NPP.DE.Init
 {
@@ -12,9 +13,9 @@ namespace NPP.DE.Init
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Init()
         {
-
-            //if (!SceneManager.GetSceneByName("Initializer").isLoaded)
-            SceneManager.LoadScene("Initializer");
+            if (SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Initializer"))
+                SceneManager.LoadScene("Initializer");
         }
+
     }
 }

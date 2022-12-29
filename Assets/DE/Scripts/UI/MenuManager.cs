@@ -1,11 +1,8 @@
-﻿using NPP.DE.Animations;
-using NPP.DE.Core.Services;
+﻿using NPP.DE.Core.Services;
+using NPP.DE.Core.Signal;
 using NPP.DE.Misc;
-using STVR.SimpleDelayer;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Zenject;
 
 namespace NPP.DE.Ui
 {
@@ -18,7 +15,6 @@ namespace NPP.DE.Ui
         private GameObject _gameUi;
         [SerializeField]
         private GameObject _gameMenuUi;
-
 
         [Header("Main Menu")]
         [SerializeField]
@@ -63,11 +59,12 @@ namespace NPP.DE.Ui
                     {
                         _transitionManager.DoneTransition("Loading Simple", true);
                         _mainMenuUi.SetActive(false);
-                        _gameUi.SetActive(true);
+                        Signals.Hub.Get<SignalCollection.AppState.GameLoadedSignal>().Dispatch(new GameLoadedParameter(this));
                     }, UnityEngine.SceneManagement.LoadSceneMode.Additive);
                 });
             });
         }
+
         private void ReturnMainMenu()
         {
             _transitionManager.PlayTransition("Left", () =>
@@ -79,7 +76,7 @@ namespace NPP.DE.Ui
                     {
                         _transitionManager.DoneTransition("Loading Simple", true);
                         _mainMenuUi.SetActive(true);
-                        _gameUi.SetActive(false);
+
                     }, UnityEngine.SceneManagement.LoadSceneMode.Additive);
                 });
             });

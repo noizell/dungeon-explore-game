@@ -20,7 +20,12 @@ namespace NPP.DE.Init
 
         private void LoadMenu()
         {
-            _sceneLoader.LoadScene("Menu", () => { _container.Unbind<Initialization>(); });
+            _sceneLoader.LoadScene("Menu", () =>
+            {
+                _container.Unbind<Initialization>();
+                _sceneLoader.UnloadScene("Initializer");
+            },
+            UnityEngine.SceneManagement.LoadSceneMode.Additive);
         }
 
         #region Injection
