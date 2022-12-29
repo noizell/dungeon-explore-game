@@ -150,6 +150,11 @@ namespace deVoid.Utils
 
             return null;
         }
+
+        public void Get<T>(object onGameLoaded)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
