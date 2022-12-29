@@ -3,6 +3,7 @@ using Zenject;
 using NPP.DE.Misc;
 using NPP.DE.Ui;
 using NPP.DE.Init;
+using NPP.DE.Core.Game;
 
 namespace NPP.DE.Installer
 {
