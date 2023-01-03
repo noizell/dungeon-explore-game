@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c0295fb0acdcc343805839cc6e408a4, type: 3}
+  m_Name: Maze Tutorial Settings
+  m_EditorClassIdentifier: 
+  _wall: {fileID: 5803252162088017363, guid: 94ebef61425481741bb2004c77e2605d, type: 3}
+  _floor: {fileID: 5353662642221457444, guid: 169d956e188175640a7f398ab3c85038, type: 3}
+  _straightCorridor: {fileID: 2011873570024548708, guid: 58f3a21379f3dd94da39e44cb48b5616, type: 3}
+  _crossCorridor: {fileID: 1545677983019918016, guid: 1e70e1e6c0e0cf04aab6f600d2000ad9, type: 3}
+  _tCorridor: {fileID: 8565775325547899828, guid: 76a25b9595d793341941e0db952b1c5c, type: 3}
+  _cornerCorridor: {fileID: 3545647548837977787, guid: a1772138a682eef429eea310d52568ff, type: 3}
+  _deadEndCorridor: {fileID: 2540948656189149796, guid: b1afa138f8afcf5419469aa7fa30d6c8, type: 3}
+  _floorRoom: {fileID: 5353662642221457444, guid: 169d956e188175640a7f398ab3c85038, type: 3}
+  _wallRoom: {fileID: 1967910832350726620, guid: acddc9396f065fa458c717489a3e6222, type: 3}
+  _ceilingRoom: {fileID: 7260528198916588174, guid: 2b4f6efdf48d733428f8827fefbf50ba, type: 3}
+  _doorRoom: {fileID: 3473425492669332405, guid: f063daa5b5f75794080dcb85c9fc6bdf, type: 3}
+  _xValue: 32
+  _zValue: 32
+  _xCorridorThickness: 1
+  _zCorridorThickness: 1
+  _roomCount: 5
+  _minXRoomSize: 3
+  _maxXRoomSize: 8
+  _minZRoomSize: 3
+  _maxZRoomSize: 8
+  _globalScaleMultiplier: 3
+  _cullSystem: {fileID: 6610996240328706633, guid: 421092bd2713cef4c9bc98bf2aee23c4, type: 3}
+  _combineDungeonMeshes: 1
+  _enableCulling: 1
+  _drawFloor: 0
+  _drawWall: 1
+  _drawRoom: 1
