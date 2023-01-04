@@ -61,12 +61,32 @@ namespace NPP.DE.Core.Dungeon.Generator
         [SerializeField]
         [Range(1f, 40f)] private float _globalScaleMultiplier = 1f;
 
+        [SerializeField]
+        [Range(1, 1000f)] private float _fogHeight;
+
+        [SerializeField]
+        [Range(1f, 400f)] private float _fogScaleX;
+
+        [SerializeField]
+        [Range(1f, 400f)] private float _fogScaleY;
+
+        [SerializeField]
+        [Range(1f, 400f)] private float _fogScaleZ;
+
         [Header("Dungeon Settings")]
         [SerializeField]
         private CullSystemDependencyManager _cullSystem;
+        [SerializeField]
+        private FOWSystem _fowSystem;
+        [SerializeField]
+        private GameObject _verticalFog;
 
         [SerializeField]
+        private bool _enableFogOfWar;
+        [SerializeField]
         private bool _combineDungeonMeshes;
+        [SerializeField]
+        private bool _enableVerticalFog;
         [SerializeField]
         private bool _enableCulling;
         [SerializeField]
@@ -86,17 +106,25 @@ namespace NPP.DE.Core.Dungeon.Generator
         public Tile DeadEndCorridor => _deadEndCorridor;
         public bool CombineDungeonMeshes => _combineDungeonMeshes;
         public bool DrawWall => _drawWall;
+        public bool EnableFogOfWar => _enableFogOfWar;
+        public bool EnableVerticalFog => _enableVerticalFog;
         public int RoomCount => _roomCount;
         public int MinXRoomSize => _minXRoomSize;
         public int MaxXRoomSize => _maxXRoomSize;
         public int MinZRoomSize => _minZRoomSize;
         public int MaxZRoomSize => _maxZRoomSize;
         public CullSystemDependencyManager CullSystemPrefab => _cullSystem;
+        public FOWSystem FOWSystemPrefab => _fowSystem;
+        public GameObject VerticalFog => _verticalFog;
         public bool EnableCulling => _enableCulling;
         public bool DrawRoom => _drawRoom;
         public Tile FloorRoom => _floorRoom;
         public Tile WallRoom => _wallRoom;
         public Tile CeilingRoom => _ceilingRoom;
         public Tile DoorRoom => _doorRoom;
+        public float FogX => _fogScaleX;
+        public float FogY => _fogScaleY;
+        public float FogZ => _fogScaleZ;
+        public float FogHeight => _fogHeight;
     }
 }
