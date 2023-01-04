@@ -25,17 +25,22 @@ MonoBehaviour:
   _doorRoom: {fileID: 3473425492669332405, guid: f063daa5b5f75794080dcb85c9fc6bdf, type: 3}
   _xValue: 32
   _zValue: 32
-  _xCorridorThickness: 1
-  _zCorridorThickness: 1
   _roomCount: 5
   _minXRoomSize: 3
   _maxXRoomSize: 8
   _minZRoomSize: 3
   _maxZRoomSize: 8
   _globalScaleMultiplier: 3
+  _fogHeight: 14
+  _fogScaleX: 120
+  _fogScaleY: 120
+  _fogScaleZ: 120
   _cullSystem: {fileID: 6610996240328706633, guid: 421092bd2713cef4c9bc98bf2aee23c4, type: 3}
+  _fowSystem: {fileID: 11400000, guid: 85b56ff2b22070f4094f15f383d9ca29, type: 3}
+  _verticalFog: {fileID: 1344167816990377945, guid: 389f0cd498abe064fa19cb8c42d112c1, type: 3}
+  _enableFogOfWar: 1
   _combineDungeonMeshes: 1
-  _enableCulling: 1
-  _drawFloor: 0
-  _drawWall: 1
+  _enableVerticalFog: 1
+  _enableCulling: 0
+  _drawWall: 0
   _drawRoom: 1

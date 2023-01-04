@@ -73,7 +73,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 128926, guid: c83073190e4a3614b9dbac2cf9c47f32, type: 3}
       propertyPath: m_TagString
-      value: Wall
+      value: Floor
       objectReference: {fileID: 0}
     - target: {fileID: 491374, guid: c83073190e4a3614b9dbac2cf9c47f32, type: 3}
       propertyPath: m_RootOrder
@@ -143,7 +143,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 128926, guid: c83073190e4a3614b9dbac2cf9c47f32, type: 3}
       propertyPath: m_TagString
-      value: Wall
+      value: Floor
       objectReference: {fileID: 0}
     - target: {fileID: 491374, guid: c83073190e4a3614b9dbac2cf9c47f32, type: 3}
       propertyPath: m_RootOrder
