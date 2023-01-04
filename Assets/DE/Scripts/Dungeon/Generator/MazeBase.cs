@@ -7,7 +7,7 @@ namespace NPP.DE.Core.Dungeon.Generator
 {
     //horizontal = x;
     //vertical = z;
-    public abstract class MazeBase : MonoBehaviour
+    public abstract class MazeBase
     {
         protected class WallRoomPlacement
         {
@@ -167,11 +167,16 @@ namespace NPP.DE.Core.Dungeon.Generator
         protected TJunctionCorridor _tJunctionHelper;
         protected DoorRoomPlacement _doorPlacementHelper;
         protected WallRoomPlacement _wallPlacementHelper;
+        public FOWSystem FOWSystem { get; private set; }
 
-        // Start is called before the first frame update
-        public void Start()
+        public void StartMaze(MazeSettings setting)
         {
+            Settings = setting;
+            StartMaze();
+        }
 
+        public void StartMaze()
+        {
             if (Settings == null) return;
 
             Initialize();
@@ -179,7 +184,6 @@ namespace NPP.DE.Core.Dungeon.Generator
             GenerateRoom();
             Draw();
         }
-
 
         protected void Initialize()
         {
@@ -243,12 +247,14 @@ namespace NPP.DE.Core.Dungeon.Generator
                     else
                     {
                         if (!Settings.DrawWall)
-                            Destroy(tempWallParent);
+                            GameObject.Destroy(tempWallParent);
 
                         DrawCorridor(Map, x, z, wallParent);
                         DrawRoom(Map, x, z, wallParent);
                     }
                 });
+
+            SeparateFloor(floorParent);
 
             //combine meshes.
             if (Settings.CombineDungeonMeshes)
@@ -260,6 +266,40 @@ namespace NPP.DE.Core.Dungeon.Generator
                     AddCullableComponent(floorParent);
                     AddCullableComponent(wallParent);
                 }
+            }
+
+            if (Settings.EnableFogOfWar)
+            {
+                InitializeFogOfWar();
+            }
+
+            if (Settings.EnableVerticalFog)
+            {
+                InitializeVerticalFog();
+            }
+        }
+
+        private void InitializeVerticalFog()
+        {
+            GameObject _verticalFog = GameObject.Instantiate(Settings.VerticalFog);
+            _verticalFog.transform.localScale = new Vector3(Settings.FogX, Settings.FogY, Settings.FogZ);
+            _verticalFog.transform.localPosition = new Vector3((Settings.XValue / 2) * Settings.GlobalScaleMultiplier * Settings.Floor.ScaleX, Settings.FogHeight, (Settings.ZValue / 2) * Settings.GlobalScaleMultiplier * Settings.Floor.ScaleZ);
+
+        }
+
+        protected void InitializeFogOfWar()
+        {
+            FOWSystem = GameObject.Instantiate(Settings.FOWSystemPrefab);
+            FOWSystem.transform.localPosition = new Vector3((Settings.XValue / 2) * Settings.GlobalScaleMultiplier * Settings.Floor.ScaleX , 0f, (Settings.ZValue / 2) * Settings.GlobalScaleMultiplier * Settings.Floor.ScaleZ);
+            FOWSystem.worldSize = 1000;
+            FOWSystem.heightRange = new Vector2(-200, 200);
+        }
+
+        protected void SeparateFloor(GameObject floorParent)
+        {
+            foreach (GameObject floor in GameObject.FindGameObjectsWithTag("Floor"))
+            {
+                floor.transform.SetParent(floorParent.transform);
             }
         }
 
@@ -284,7 +324,7 @@ namespace NPP.DE.Core.Dungeon.Generator
             {
                 if (IsCrossroad(map, x, z))
                 {
-                    _tempCorridor = Instantiate(Settings.CrossCorridor.TileMesh, wallParent.transform);
+                    _tempCorridor = GameObject.Instantiate(Settings.CrossCorridor.TileMesh, wallParent.transform);
                     _tempCorridor.transform.localScale = _tempCorridor.transform.localScale * Settings.GlobalScaleMultiplier;
                     AdjustPosition(_tempCorridor, Settings.CrossCorridor.ScaleX, Settings.Floor.ScaleY, Settings.CrossCorridor.ScaleZ, x, z);
                 }
@@ -300,7 +340,7 @@ namespace NPP.DE.Core.Dungeon.Generator
                         //T Junction.
                         if ((h + v + hr + vr) >= 3)
                         {
-                            _tempCorridor = Instantiate(Settings.TCorridor.TileMesh, wallParent.transform);
+                            _tempCorridor = GameObject.Instantiate(Settings.TCorridor.TileMesh, wallParent.transform);
                             _tempCorridor.transform.localScale = _tempCorridor.transform.localScale * Settings.GlobalScaleMultiplier;
                             AdjustPosition(_tempCorridor, Settings.TCorridor.ScaleX, Settings.Floor.ScaleY, Settings.TCorridor.ScaleZ, x, z);
                             _tempCorridor.transform.localRotation = Quaternion.Euler(_tJunctionHelper.GetDirection(map, x, z));
@@ -308,7 +348,7 @@ namespace NPP.DE.Core.Dungeon.Generator
                         //its normal corridor
                         else
                         {
-                            _tempCorridor = Instantiate(Settings.StraightCorridor.TileMesh, wallParent.transform);
+                            _tempCorridor = GameObject.Instantiate(Settings.StraightCorridor.TileMesh, wallParent.transform);
                             _tempCorridor.transform.localScale = _tempCorridor.transform.localScale * Settings.GlobalScaleMultiplier;
                             AdjustPosition(_tempCorridor, Settings.StraightCorridor.ScaleX, Settings.Floor.ScaleY, Settings.StraightCorridor.ScaleZ, x, z);
 
@@ -322,7 +362,7 @@ namespace NPP.DE.Core.Dungeon.Generator
                     //Corner.
                     else if ((h == 1 && v == 1) || (hr == 1 && vr == 1) || (h == 1 && vr == 1) || (hr == 1 && v == 1))
                     {
-                        _tempCorridor = Instantiate(Settings.CornerCorridor.TileMesh, wallParent.transform);
+                        _tempCorridor = GameObject.Instantiate(Settings.CornerCorridor.TileMesh, wallParent.transform);
                         _tempCorridor.transform.localScale = _tempCorridor.transform.localScale * Settings.GlobalScaleMultiplier;
                         AdjustPosition(_tempCorridor, Settings.CornerCorridor.ScaleX, Settings.Floor.ScaleY, Settings.CornerCorridor.ScaleZ, x, z);
                         _tempCorridor.transform.localRotation = Quaternion.Euler(_cornerHelper.GetDirection(map, x, z));
@@ -330,97 +370,13 @@ namespace NPP.DE.Core.Dungeon.Generator
                     //dead end.
                     else if (h == 1 || v == 1 || vr == 1 || hr == 1)
                     {
-                        _tempCorridor = Instantiate(Settings.DeadEndCorridor.TileMesh, wallParent.transform);
+                        _tempCorridor = GameObject.Instantiate(Settings.DeadEndCorridor.TileMesh, wallParent.transform);
                         _tempCorridor.transform.localScale = _tempCorridor.transform.localScale * Settings.GlobalScaleMultiplier;
                         AdjustPosition(_tempCorridor, Settings.DeadEndCorridor.ScaleX, Settings.Floor.ScaleY, Settings.DeadEndCorridor.ScaleZ, x, z);
 
                         _tempCorridor.transform.localRotation = Quaternion.Euler(_deadEndHelper.GetDirection(map, x, z));
                     }
                 }
-
-                ////check center
-                //if (IsCrossroad(map, x, z))
-                //{
-                //    _tempCorridor = Instantiate(Settings.CrossCorridor.TileMesh, wallParent.transform);
-                //    _tempCorridor.transform.localScale = _tempCorridor.transform.localScale * Settings.GlobalScaleMultiplier;
-                //    AdjustPosition(_tempCorridor, Settings.CrossCorridor.ScaleX, Settings.Floor.ScaleY, Settings.CrossCorridor.ScaleZ, x, z);
-                //}
-                //else
-                //{
-                //    int h = CountNeighborHorizontal(map, x, z);
-                //    int v = CountNeighborVertical(map, x, z);
-                //    int d = CountNeighborDiagonal(map, x, z);
-
-                //    //check T juntion
-                //    if (IsHorizontalTJunction(h))
-                //    {
-                //        _tempCorridor = Instantiate(Settings.TCorridor.TileMesh, wallParent.transform);
-                //        _tempCorridor.transform.localScale = _tempCorridor.transform.localScale * Settings.GlobalScaleMultiplier;
-                //        AdjustPosition(_tempCorridor, Settings.TCorridor.ScaleX, Settings.Floor.ScaleY, Settings.TCorridor.ScaleZ, x, z);
-                //        _tempCorridor.transform.localRotation = Quaternion.Euler(_tJunctionHelper.GetDirection(map, x, z));
-                //    }
-                //    else if (IsVerticalTJunction(v))
-                //    {
-                //        _tempCorridor = Instantiate(Settings.TCorridor.TileMesh, wallParent.transform);
-                //        _tempCorridor.transform.localScale = _tempCorridor.transform.localScale * Settings.GlobalScaleMultiplier;
-                //        AdjustPosition(_tempCorridor, Settings.TCorridor.ScaleX, Settings.Floor.ScaleY, Settings.TCorridor.ScaleZ, x, z);
-
-                //        _tempCorridor.transform.localRotation = Quaternion.Euler(_tJunctionHelper.GetDirection(map, x, z));
-                //    }
-                //    else if (IsNormalCorridor(h, v))
-                //    {
-                //        //check horizontal straight
-                //        if (IsHorizontalCorridor(h, v))
-                //        {
-                //            //else
-                //            {
-                //                _tempCorridor = Instantiate(Settings.StraightCorridor.TileMesh, wallParent.transform);
-                //                _tempCorridor.transform.localScale = _tempCorridor.transform.localScale * Settings.GlobalScaleMultiplier;
-                //                AdjustPosition(_tempCorridor, Settings.StraightCorridor.ScaleX, Settings.Floor.ScaleY, Settings.StraightCorridor.ScaleZ, x, z);
-                //            }
-                //        }
-                //        //check vertical straight
-                //        else
-                //        {
-                //            //else
-                //            {
-                //                _tempCorridor = Instantiate(Settings.StraightCorridor.TileMesh, wallParent.transform);
-                //                _tempCorridor.transform.localScale = _tempCorridor.transform.localScale * Settings.GlobalScaleMultiplier;
-                //                AdjustPosition(_tempCorridor, Settings.StraightCorridor.ScaleX, Settings.Floor.ScaleY, Settings.StraightCorridor.ScaleZ, x, z);
-                //                _tempCorridor.transform.localRotation = Quaternion.Euler(0f, 90f, 0f);
-                //            }
-                //        }
-                //    }
-                //    else if (IsCorner(h, v, d))
-                //    {
-                //        _tempCorridor = Instantiate(Settings.CornerCorridor.TileMesh, wallParent.transform);
-                //        _tempCorridor.transform.localScale = _tempCorridor.transform.localScale * Settings.GlobalScaleMultiplier;
-                //        AdjustPosition(_tempCorridor, Settings.CornerCorridor.ScaleX, Settings.Floor.ScaleY, Settings.CornerCorridor.ScaleZ, x, z);
-
-                //        _tempCorridor.transform.localRotation = Quaternion.Euler(_cornerHelper.GetDirection(map, x, z));
-                //    }
-                //    else
-                //    {
-                //        //validate door
-                //        if (_doorPlacementHelper.LocateDoorPlacement(map, x, z, 2))
-                //        {
-                //            _tempCorridor = Instantiate(Settings.DoorRoom.TileMesh, wallParent.transform);
-                //            _tempCorridor.transform.localScale = _tempCorridor.transform.localScale * Settings.GlobalScaleMultiplier;
-                //            AdjustPosition(_tempCorridor, Settings.DoorRoom.ScaleX, Settings.Floor.ScaleY, Settings.DoorRoom.ScaleZ, x, z);
-
-                //            _tempCorridor.transform.localRotation = Quaternion.Euler(_doorPlacementHelper.GetDirection(map, x, z));
-                //        }
-                //        else
-                //        {
-                //            //draw dead end
-                //            _tempCorridor = Instantiate(Settings.DeadEndCorridor.TileMesh, wallParent.transform);
-                //            _tempCorridor.transform.localScale = _tempCorridor.transform.localScale * Settings.GlobalScaleMultiplier;
-                //            AdjustPosition(_tempCorridor, Settings.DeadEndCorridor.ScaleX, Settings.Floor.ScaleY, Settings.DeadEndCorridor.ScaleZ, x, z);
-
-                //            _tempCorridor.transform.localRotation = Quaternion.Euler(_deadEndHelper.GetDirection(map, x, z));
-                //        }
-                //    }
-                //}
 
                 void AdjustPosition(GameObject _tempCorridor, float scaleX, float scaleY, float scaleZ, int x, int z)
                 {
@@ -443,7 +399,7 @@ namespace NPP.DE.Core.Dungeon.Generator
         {
             if (Settings.DrawWall)
             {
-                _tempWall = Instantiate(Settings.Wall.TileMesh, wallParent.transform);
+                _tempWall = GameObject.Instantiate(Settings.Wall.TileMesh, wallParent.transform);
                 _tempWall.transform.localScale = _tempWall.transform.localScale * Settings.GlobalScaleMultiplier;
                 _tempWall.transform.localPosition = new Vector3(x * Settings.Wall.ScaleX * Settings.GlobalScaleMultiplier, Settings.Floor.ScaleY * Settings.GlobalScaleMultiplier, z * Settings.Wall.ScaleZ * Settings.GlobalScaleMultiplier);
             }
@@ -455,7 +411,7 @@ namespace NPP.DE.Core.Dungeon.Generator
             {
                 if (map[x, z] == 2 && (CountNeighborSquare(map, x, z, 2) > 1 && CountNeighborDiagonal(map, x, z, 2) >= 1 || CountNeighborSquare(map, x, z, 2) >= 1 && CountNeighborDiagonal(map, x, z, 2) > 1))
                 {
-                    _tempWall = Instantiate(Settings.FloorRoom.TileMesh, wallParent.transform);
+                    _tempWall = GameObject.Instantiate(Settings.FloorRoom.TileMesh, wallParent.transform);
                     _tempWall.transform.localScale = _tempWall.transform.localScale * Settings.GlobalScaleMultiplier;
                     AdjustPosition(_tempWall, Settings.FloorRoom.ScaleX, Settings.Floor.ScaleY, Settings.FloorRoom.ScaleZ, x, z);
 
@@ -465,7 +421,7 @@ namespace NPP.DE.Core.Dungeon.Generator
                         {
                             if (wall == WallRoomPlacement.WallDirection.Up)
                             {
-                                GameObject _tempWall = Instantiate(Settings.WallRoom.TileMesh, wallParent.transform);
+                                GameObject _tempWall = GameObject.Instantiate(Settings.WallRoom.TileMesh, wallParent.transform);
                                 AdjustPosition(_tempWall, Settings.WallRoom.ScaleX, Settings.Floor.ScaleY, Settings.WallRoom.ScaleZ, x, z);
                                 _tempWall.transform.localScale = _tempWall.transform.localScale * Settings.GlobalScaleMultiplier;
                                 _tempWall.transform.localRotation = Quaternion.Euler(_wallPlacementHelper.Up);
@@ -473,7 +429,7 @@ namespace NPP.DE.Core.Dungeon.Generator
 
                             if (wall == WallRoomPlacement.WallDirection.Down)
                             {
-                                GameObject _tempWall = Instantiate(Settings.WallRoom.TileMesh, wallParent.transform);
+                                GameObject _tempWall = GameObject.Instantiate(Settings.WallRoom.TileMesh, wallParent.transform);
                                 AdjustPosition(_tempWall, Settings.WallRoom.ScaleX, Settings.Floor.ScaleY, Settings.WallRoom.ScaleZ, x, z);
                                 _tempWall.transform.localScale = _tempWall.transform.localScale * Settings.GlobalScaleMultiplier;
                                 _tempWall.transform.localRotation = Quaternion.Euler(_wallPlacementHelper.Down);
@@ -481,7 +437,7 @@ namespace NPP.DE.Core.Dungeon.Generator
 
                             if (wall == WallRoomPlacement.WallDirection.Left)
                             {
-                                GameObject _tempWall = Instantiate(Settings.WallRoom.TileMesh, wallParent.transform);
+                                GameObject _tempWall = GameObject.Instantiate(Settings.WallRoom.TileMesh, wallParent.transform);
                                 AdjustPosition(_tempWall, Settings.WallRoom.ScaleX, Settings.Floor.ScaleY, Settings.WallRoom.ScaleZ, x, z);
                                 _tempWall.transform.localScale = _tempWall.transform.localScale * Settings.GlobalScaleMultiplier;
                                 _tempWall.transform.localRotation = Quaternion.Euler(_wallPlacementHelper.Left);
@@ -489,7 +445,7 @@ namespace NPP.DE.Core.Dungeon.Generator
 
                             if (wall == WallRoomPlacement.WallDirection.Right)
                             {
-                                GameObject _tempWall = Instantiate(Settings.WallRoom.TileMesh, wallParent.transform);
+                                GameObject _tempWall = GameObject.Instantiate(Settings.WallRoom.TileMesh, wallParent.transform);
                                 AdjustPosition(_tempWall, Settings.WallRoom.ScaleX, Settings.Floor.ScaleY, Settings.WallRoom.ScaleZ, x, z);
                                 _tempWall.transform.localScale = _tempWall.transform.localScale * Settings.GlobalScaleMultiplier;
                                 _tempWall.transform.localRotation = Quaternion.Euler(_wallPlacementHelper.Right);
@@ -508,7 +464,7 @@ namespace NPP.DE.Core.Dungeon.Generator
 
         protected void InitializeCullSystem()
         {
-            CullSystemManager cullSystem = Instantiate(Settings.CullSystemPrefab).GetComponent<CullSystemManager>();
+            CullSystemManager cullSystem = GameObject.Instantiate(Settings.CullSystemPrefab).GetComponent<CullSystemManager>();
             cullSystem.cullDistance = 80;
             cullSystem.GetComponent<CenterOfCullSystem>().centerOfCullSystem = Camera.main.transform;
         }
@@ -535,7 +491,7 @@ namespace NPP.DE.Core.Dungeon.Generator
             }
 
             GameObject CombinedMeshes = new GameObject("Combined Meshes");
-            Combiner = gameObject.AddComponent<EzCombine>();
+            Combiner = new GameObject("Dungeon Combiner").AddComponent<EzCombine>();
             Combiner.options = new EzCombine.OptionsClass();
             Combiner.chunksParent = CombinedMeshes.transform;
             Combiner.options.chunkSize = 8;
@@ -555,8 +511,8 @@ namespace NPP.DE.Core.Dungeon.Generator
             Combiner.combine[1].addMeshCollider = true;
 
             Combiner.CombineCall();
-            Destroy(floorParent);
-            Destroy(wallParent);
+            GameObject.Destroy(floorParent);
+            GameObject.Destroy(wallParent);
 
             AddCullableComponent(CombinedMeshes);
         }

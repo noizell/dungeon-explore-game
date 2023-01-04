@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Zenject;
 using NPP.DE.Core.Game;
+using NPP.DE.Core.Dungeon.Generator;
 
 namespace NPP.DE.Installer
 {
@@ -10,6 +11,7 @@ namespace NPP.DE.Installer
         public override void InstallBindings()
         {
             Container.Bind<GameCounter>().AsSingle();
+            Container.Bind<MazeRecursiveDFS>().AsSingle();
         }
 
     }
