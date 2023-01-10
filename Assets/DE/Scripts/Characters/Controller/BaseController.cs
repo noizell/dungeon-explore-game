@@ -1,7 +1,9 @@
-using UnityEngine;
+using Animancer;
 using KinematicCharacterController;
-using Stateless;
 using NPP.DE.Core.Factory;
+using Stateless;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace NPP.DE.Core.Character
 {
@@ -21,6 +23,35 @@ namespace NPP.DE.Core.Character
 
     public abstract class BaseController : ICharacterController, IFactoryMember
     {
+        public class AnimationController
+        {
+            private AnimancerComponent _animancerComponent;
+            private AnimancerClip[] _clips;
+            private Dictionary<string, AnimationClip> _clipDict = new Dictionary<string, AnimationClip>();
+
+            public AnimationController(AnimancerComponent animancerComponent, AnimancerClip[] clips)
+            {
+                _animancerComponent = animancerComponent;
+                _clips = clips;
+
+                for (int i = 0; i < _clips.Length; i++)
+                {
+                    _clipDict.Add(_clips[i].AnimationName, _clips[i].Clip);
+                }
+            }
+
+            public void Play(string Name)
+            {
+                _animancerComponent.Play(_clipDict[Name]);
+            }
+
+            public void Crossfade(string name, float fadeDuration = .2f)
+            {
+                _animancerComponent.Play(_clipDict[name], fadeDuration);
+            }
+
+        }
+
         //States
         protected StateMachine<CharacterState, CharacterTrigger> Machine;
         protected StateMachine<CharacterState, CharacterTrigger>.TriggerWithParameters<Vector3> MoveTrigger;
@@ -33,12 +64,16 @@ namespace NPP.DE.Core.Character
         protected float StableMovementSharpness;
         protected float OrientationSharpness;
 
+        //Misc
+        protected bool EnableAnimationController;
+        protected AnimationController AnimationControllers;
+
         protected BaseController()
         {
 
         }
 
-        public void Initialize(KinematicCharacterMotor motor, float maxMoveSpeed, float movementSharpness, float orientationSharpness)
+        public void Initialize(KinematicCharacterMotor motor, float maxMoveSpeed, float movementSharpness, float orientationSharpness, bool enableAnimationController = true)
         {
             InitializeState();
 
@@ -47,6 +82,12 @@ namespace NPP.DE.Core.Character
             MaxStableMoveSpeed = maxMoveSpeed;
             StableMovementSharpness = movementSharpness;
             OrientationSharpness = orientationSharpness;
+            EnableAnimationController = enableAnimationController;
+        }
+
+        public void InitializeAnimationController(AnimancerComponent animancerComponent, AnimancerClip[] clips)
+        {
+            AnimationControllers = new AnimationController(animancerComponent, clips);
         }
 
         private void InitializeState()
@@ -56,11 +97,25 @@ namespace NPP.DE.Core.Character
 
             Machine.Configure(CharacterState.Idle)
                 .PermitDynamic(CharacterTrigger.OnMove, OnCheckMovement)
-                .OnEntryFrom(MoveTrigger, OnMoveExecuted);
+                .OnEntryFrom(MoveTrigger, OnMoveExecuted)
+                .OnEntry(() =>
+                {
+                    if (EnableAnimationController)
+                    {
+                        AnimationControllers.Crossfade("Idle");
+                    }
+                });
 
             Machine.Configure(CharacterState.Move)
                 .PermitDynamic(CharacterTrigger.OnMove, OnCheckMovementFromMove)
-                .OnEntryFrom(MoveTrigger, OnMoveExecuted);
+                .OnEntryFrom(MoveTrigger, OnMoveExecuted)
+                .OnEntry(() =>
+                {
+                    if (EnableAnimationController)
+                    {
+                        AnimationControllers.Crossfade("Run");
+                    }
+                });
         }
 
         private CharacterState OnCheckMovementFromMove()

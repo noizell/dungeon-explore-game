@@ -9,10 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1404144063204196529}
+  - component: {fileID: 8411112530922378155}
   - component: {fileID: 3462612801016371579}
   - component: {fileID: 3319522588022790739}
   - component: {fileID: 4082358102397504912}
   - component: {fileID: 6969432992416052234}
+  - component: {fileID: 5083099165584831195}
   m_Layer: 0
   m_Name: Test Player
   m_TagString: Untagged
@@ -35,6 +37,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &8411112530922378155
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1404144063204196531}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: e959c185aba0aee449154c0d8fc246a5, type: 3}
+  m_Controller: {fileID: 9100000, guid: 36df01e1544b834439c569d01b185d60, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!54 &3462612801016371579
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -119,6 +140,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9c924403089bb1429cd9e35a4d528e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _clips:
+  - Clip: {fileID: -8678755014074878539, guid: e959c185aba0aee449154c0d8fc246a5, type: 3}
+    AnimationName: Idle
+  - Clip: {fileID: -2699329815872342117, guid: e959c185aba0aee449154c0d8fc246a5, type: 3}
+    AnimationName: Run
+--- !u!114 &5083099165584831195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1404144063204196531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad50f81b1d25c441943c37a89ba23f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Animator: {fileID: 8411112530922378155}
+  _ActionOnDisable: 0
 --- !u!1 &1404144064431741466
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,7 +245,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: ply_21105780
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5866666021909216657, guid: e959c185aba0aee449154c0d8fc246a5, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e959c185aba0aee449154c0d8fc246a5, type: 3}
 --- !u!4 &1510461705918260906 stripped
 Transform:
