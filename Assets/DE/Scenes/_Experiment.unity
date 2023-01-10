@@ -133,7 +133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 423068088}
   - component: {fileID: 423068087}
-  - component: {fileID: 423068086}
   - component: {fileID: 423068089}
   - component: {fileID: 423068090}
   - component: {fileID: 423068091}
@@ -147,14 +146,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &423068086
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 423068085}
-  m_Enabled: 1
 --- !u!20 &423068087
 Camera:
   m_ObjectHideFlags: 0
@@ -242,6 +233,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _settings: {fileID: 11400000, guid: dd0f662dbd53cee4297611a70f957aad, type: 2}
+  _player: {fileID: 6969432992416052234, guid: 2e6d4a8cd3c014c4899169b12852ebeb, type: 3}
 --- !u!135 &423068091
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -423,6 +415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers:
+  - {fileID: 11400000, guid: 58d7ec2726f63dd4c8bbeeb068196829, type: 2}
   - {fileID: 11400000, guid: a003db6beb5675741886b8ce6c811cf2, type: 2}
   _monoInstallers: []
   _installerPrefabs: []

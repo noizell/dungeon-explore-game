@@ -1,4 +1,7 @@
+using NPP.DE.Core.Character;
 using NPP.DE.Core.Dungeon.Generator;
+using NPP.DE.Core.Services;
+using NPP.DE.Misc;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,10 +9,21 @@ using Zenject;
 
 public class DitherFade : MonoBehaviour
 {
+    //for test purpose only.
     [SerializeField]
     MazeSettings _settings;
-
     MazeRecursiveDFS _maze;
+
+    //for test purpose only.
+    [SerializeField]
+    BaseCharacter _player;
+    PlayerControllerFactory _playerFactory
+    {
+        get
+        {
+            return PersistentServices.Current.Get<AssetLoader>().Load<PlayerControllerFactory>("Player Controller Factory", "Factory");
+        }
+    }
 
     [Inject]
     private void Construct(MazeRecursiveDFS maze)
@@ -28,6 +42,9 @@ public class DitherFade : MonoBehaviour
                 Material _mat = new Material(mat.material);
             }
         }
+
+        var player = Instantiate(_player);
+        player.GetComponent<BaseCharacter>().Initialize(_playerFactory);
     }
 
     private void OnTriggerEnter(Collider other)
