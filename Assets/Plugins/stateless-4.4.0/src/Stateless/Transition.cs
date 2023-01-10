@@ -1,4 +1,6 @@
-﻿namespace Stateless
+﻿using System;
+
+namespace Stateless
 {
     public partial class StateMachine<TState, TTrigger>
     {
@@ -66,6 +68,11 @@
             /// Never null. For a parameterless trigger the value will be an empty array.
             /// </remarks>
             public object[] Parameters { get; }
+        }
+
+        public ValueTuple<T, object> SetTriggerParameters<T>(object onMove)
+        {
+            throw new NotImplementedException();
         }
     }
 }

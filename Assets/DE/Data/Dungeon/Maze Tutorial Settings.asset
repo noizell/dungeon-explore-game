@@ -38,9 +38,9 @@ MonoBehaviour:
   _cullSystem: {fileID: 6610996240328706633, guid: 421092bd2713cef4c9bc98bf2aee23c4, type: 3}
   _fowSystem: {fileID: 11400000, guid: 85b56ff2b22070f4094f15f383d9ca29, type: 3}
   _verticalFog: {fileID: 1344167816990377945, guid: 389f0cd498abe064fa19cb8c42d112c1, type: 3}
-  _enableFogOfWar: 1
+  _enableFogOfWar: 0
   _combineDungeonMeshes: 1
-  _enableVerticalFog: 1
-  _enableCulling: 0
+  _enableVerticalFog: 0
+  _enableCulling: 1
   _drawWall: 0
   _drawRoom: 1

@@ -11,6 +11,9 @@ namespace NPP.DE.Installer
     [CreateAssetMenu(fileName = "Core Installer", menuName = "NPP/DE/Create new Core Installer")]
     public class CoreInstaller : ScriptableObjectInstaller
     {
+        [Header("Settings")]
+        [SerializeField]
+        private bool _experimentMode;
 
         [Header("Transition Manager Component")]
         [SerializeField]
@@ -23,7 +26,7 @@ namespace NPP.DE.Installer
             Container.Bind<JSONSerializer>().AsSingle();
             Container.BindInterfacesAndSelfTo<TransitionManager>().AsSingle().WithArguments(_transitionList);
 
-            Container.Bind<Initialization>().AsSingle().NonLazy();
+            Container.Bind<Initialization>().AsSingle().WithArguments(_experimentMode).NonLazy();
         }
     }
 }

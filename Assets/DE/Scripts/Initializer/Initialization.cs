@@ -11,11 +11,13 @@ namespace NPP.DE.Init
     {
         private SceneLoader _sceneLoader;
         private DiContainer _container;
+        private bool _experiment;
 
-        public Initialization(SceneLoader loader, DiContainer container)
+        public Initialization(SceneLoader loader, DiContainer container, bool experiment)
         {
             _sceneLoader = loader;
             _container = container;
+            _experiment = experiment;
             LoadMenu();
         }
 
@@ -25,12 +27,15 @@ namespace NPP.DE.Init
 
             GlobalServices.GameStateTransition();
 
-            _sceneLoader.LoadScene("Menu", () =>
+            if (!_experiment)
             {
-                _container.Unbind<Initialization>();
-                _sceneLoader.UnloadScene("Initializer");
-            },
-            UnityEngine.SceneManagement.LoadSceneMode.Additive);
+                _sceneLoader.LoadScene("Menu", () =>
+                {
+                    _container.Unbind<Initialization>();
+                    _sceneLoader.UnloadScene("Initializer");
+                },
+                UnityEngine.SceneManagement.LoadSceneMode.Additive);
+            }
         }
 
         #region Injection
