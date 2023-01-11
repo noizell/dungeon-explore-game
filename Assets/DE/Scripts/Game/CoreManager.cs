@@ -12,7 +12,7 @@ namespace NPP.DE.Core.Game
         private GameCounter _counter;
         private MenuManager _menuManager;
 
-        [Inject]
+        [Zenject.Inject]
         private void ConstructGameCounter(GameCounter counter)
         {
             _counter = counter;

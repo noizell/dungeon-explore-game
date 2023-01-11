@@ -145,6 +145,8 @@ MonoBehaviour:
     AnimationName: Idle
   - Clip: {fileID: -2699329815872342117, guid: e959c185aba0aee449154c0d8fc246a5, type: 3}
     AnimationName: Run
+  - Clip: {fileID: -2699329815872342117, guid: e959c185aba0aee449154c0d8fc246a5, type: 3}
+    AnimationName: Run
 --- !u!114 &5083099165584831195
 MonoBehaviour:
   m_ObjectHideFlags: 0

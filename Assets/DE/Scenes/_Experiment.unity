@@ -233,7 +233,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _settings: {fileID: 11400000, guid: dd0f662dbd53cee4297611a70f957aad, type: 2}
-  _player: {fileID: 6969432992416052234, guid: 2e6d4a8cd3c014c4899169b12852ebeb, type: 3}
+  _player: {fileID: 6280192366191810270, guid: 2784b99fe3d3aa14cb89083248862cd9, type: 3}
 --- !u!135 &423068091
 SphereCollider:
   m_ObjectHideFlags: 0

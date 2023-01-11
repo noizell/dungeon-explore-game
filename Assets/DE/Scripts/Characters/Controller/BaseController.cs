@@ -2,6 +2,7 @@ using Animancer;
 using KinematicCharacterController;
 using NPP.DE.Core.Factory;
 using Stateless;
+using Stateless.Graph;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,7 +29,7 @@ namespace NPP.DE.Core.Character
             private AnimancerComponent _animancerComponent;
             private AnimancerClip[] _clips;
             private Dictionary<string, AnimationClip> _clipDict = new Dictionary<string, AnimationClip>();
-
+            private AnimancerState _curState;
             public AnimationController(AnimancerComponent animancerComponent, AnimancerClip[] clips)
             {
                 _animancerComponent = animancerComponent;
@@ -47,7 +48,14 @@ namespace NPP.DE.Core.Character
 
             public void Crossfade(string name, float fadeDuration = .2f)
             {
-                _animancerComponent.Play(_clipDict[name], fadeDuration);
+                if (!_animancerComponent.IsPlayingClip(_clipDict[name]))
+                    _animancerComponent.Play(_clipDict[name], fadeDuration);
+            }
+
+            public bool IsDoneClip(string name)
+            {
+                _curState = _animancerComponent.Playable.States.GetOrCreate(_clipDict[name]);
+                return _animancerComponent.IsPlayingClip(_clipDict[name]) && _curState.NormalizedTime >= 1;
             }
 
         }
@@ -55,7 +63,14 @@ namespace NPP.DE.Core.Character
         //States
         protected StateMachine<CharacterState, CharacterTrigger> Machine;
         protected StateMachine<CharacterState, CharacterTrigger>.TriggerWithParameters<Vector3> MoveTrigger;
-        public CharacterState CurrentState => Machine.State;
+        protected StateMachine<CharacterState, CharacterTrigger>.TriggerWithParameters<bool> AttackTrigger;
+        public CharacterState CurrentState
+        {
+            get
+            {
+                return Machine.State;
+            }
+        }
 
         //Movement
         protected KinematicCharacterMotor Motor;
@@ -67,6 +82,7 @@ namespace NPP.DE.Core.Character
         //Misc
         protected bool EnableAnimationController;
         protected AnimationController AnimationControllers;
+        protected bool OnAttack = false;
 
         protected BaseController()
         {
@@ -94,28 +110,77 @@ namespace NPP.DE.Core.Character
         {
             Machine = new StateMachine<CharacterState, CharacterTrigger>(CharacterState.Idle);
             MoveTrigger = Machine.SetTriggerParameters<Vector3>(CharacterTrigger.OnMove);
+            AttackTrigger = Machine.SetTriggerParameters<bool>(CharacterTrigger.OnAttack);
 
             Machine.Configure(CharacterState.Idle)
-                .PermitDynamic(CharacterTrigger.OnMove, OnCheckMovement)
-                .OnEntryFrom(MoveTrigger, OnMoveExecuted)
                 .OnEntry(() =>
                 {
                     if (EnableAnimationController)
                     {
                         AnimationControllers.Crossfade("Idle");
                     }
+                })
+                .OnEntryFrom(MoveTrigger, OnMoveExecuted)
+                .PermitDynamic(CharacterTrigger.OnMove, OnCheckMovement)
+                .OnEntryFrom(AttackTrigger, OnAttackPerformed)
+                .PermitDynamic(CharacterTrigger.OnAttack, () =>
+                {
+                    if (!Machine.IsInState(CharacterState.Attack) && isValidAttack())
+                        return CharacterState.Attack;
+
+                    return CharacterState.Idle;
                 });
 
             Machine.Configure(CharacterState.Move)
-                .PermitDynamic(CharacterTrigger.OnMove, OnCheckMovementFromMove)
-                .OnEntryFrom(MoveTrigger, OnMoveExecuted)
                 .OnEntry(() =>
                 {
                     if (EnableAnimationController)
                     {
                         AnimationControllers.Crossfade("Run");
                     }
+                })
+                .IgnoreIf(CharacterTrigger.OnMove, () => Machine.IsInState(CharacterState.Attack))
+                .PermitDynamic(CharacterTrigger.OnMove, OnCheckMovementFromMove)
+                .OnEntryFrom(MoveTrigger, OnMoveExecuted)
+                .PermitDynamic(CharacterTrigger.OnAttack, () =>
+                {
+                    if (!Machine.IsInState(CharacterState.Attack) && isValidAttack())
+                        return CharacterState.Attack;
+
+                    if (IsValidMove() && !Machine.IsInState(CharacterState.Attack) && !isValidAttack())
+                        return CharacterState.Move;
+
+                    return CharacterState.Idle;
                 });
+
+            Machine.Configure(CharacterState.Attack)
+                .OnEntry(() =>
+                {
+                    if (EnableAnimationController)
+                    {
+                        AnimationControllers.Crossfade("Attack 1");
+                    }
+                })
+                .OnEntryFrom(AttackTrigger, OnAttackPerformed)
+                .Ignore(CharacterTrigger.OnMove)
+                .PermitDynamic(CharacterTrigger.OnAttack, () =>
+                {
+                    if ((Machine.IsInState(CharacterState.Attack) && isValidAttack()) || !AnimationControllers.IsDoneClip("Attack 1"))
+                        return CharacterState.Attack;
+
+                    return CharacterState.Idle;
+                });
+
+        }
+
+        private void OnAttackPerformed(bool atk)
+        {
+            OnAttack = atk;
+        }
+
+        private bool isValidAttack()
+        {
+            return OnAttack;
         }
 
         private CharacterState OnCheckMovementFromMove()
@@ -139,9 +204,14 @@ namespace NPP.DE.Core.Character
             Machine.Fire(trigger);
         }
 
-        public void Fire(Vector3 param)
+        public void DoMove(Vector3 param)
         {
             Machine.Fire(MoveTrigger, param);
+        }
+
+        public void DoAttack(bool param)
+        {
+            Machine.Fire(AttackTrigger, param);
         }
 
         protected void OnMoveExecuted(Vector3 move)

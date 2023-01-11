@@ -25,7 +25,7 @@ public class DitherFade : MonoBehaviour
         }
     }
 
-    [Inject]
+    //[Inject]
     private void Construct(MazeRecursiveDFS maze)
     {
         _maze = maze;
