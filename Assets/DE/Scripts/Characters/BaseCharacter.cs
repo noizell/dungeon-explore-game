@@ -17,6 +17,8 @@ namespace NPP.DE.Core.Character
         }
     }
 
+    [RequireComponent(typeof(CapsuleCollider))]
+    [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(AnimancerComponent))]
     [RequireComponent(typeof(KinematicCharacterMotor))]
@@ -25,6 +27,7 @@ namespace NPP.DE.Core.Character
         BaseController _controller;
         KinematicCharacterMotor _motor;
         Vector3 _moveInputs;
+        bool _doAttack;
 
         [SerializeField]
         AnimancerClip[] _clips;
@@ -36,14 +39,18 @@ namespace NPP.DE.Core.Character
             _motor = GetComponent<KinematicCharacterMotor>();
             _controller = playerFactory.Create();
             _motor.CharacterController = _controller;
-            _controller.Initialize(_motor, 14f, 14f, 14f);
+            _controller.Initialize(_motor, 8f, 8f, 14f);
             _controller.InitializeAnimationController(GetComponent<AnimancerComponent>(), Clips);
         }
 
         private void Update()
         {
             _moveInputs = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
-            _controller.Fire(_moveInputs);
+            _doAttack = false;
+            _doAttack = Input.GetMouseButtonDown(0);
+            _controller.DoMove(_moveInputs);
+            _controller.DoAttack(_doAttack);
+
 
             Debug.Log(_controller.CurrentState);
         }

@@ -200,7 +200,7 @@ ModelImporter:
     second: anm_90001005_rider
   - first:
       74: -5531157616389154230
-    second: anm_90001006
+    second: Attack3
   - first:
       74: -7998512984171669274
     second: anm_90001006_rider
@@ -2255,11 +2255,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: anm_90001006
+      name: Attack3
       takeName: anm_90001006
       internalID: 0
       firstFrame: 0
-      lastFrame: 330
+      lastFrame: 48
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -2268,8 +2268,8 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 0
       keepOriginalPositionY: 1

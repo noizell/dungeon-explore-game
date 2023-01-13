@@ -20,7 +20,8 @@ namespace NPP.DE.Ui
 
         public override void PlayTransition(System.Action callback = null)
         {
-            _animCallback = PersistentServices.Current.Get<TransitionManager>().AnimationCallbackFactory.Create();
+            //_animCallback = PersistentServices.Current.Get<TransitionManager>().AnimationCallbackFactory.Create();
+            _animCallback = new AnimationCallback();
             _animancer.Animator.GetBehaviour<AnimationEvent>().SetOnEnd(_animancer.Animator, _animCallback,
                 () =>
                 {

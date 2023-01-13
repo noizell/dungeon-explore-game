@@ -4,11 +4,15 @@ using NPP.DE.Core.State;
 using NPP.DE.Misc;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace NPP.DE.Ui
 {
     public class MenuManager : MonoBehaviour
     {
+        [SerializeField]
+        private SceneContext _context;
+
         [SerializeField]
         private GameObject _mainMenuUi;
         [SerializeField]
@@ -45,6 +49,8 @@ namespace NPP.DE.Ui
             _sceneLoader = PersistentServices.Current.Get<SceneLoader>();
             _startButton.onClick.AddListener(() => StartGame());
             _mainMenuButton.onClick.AddListener(() => ReturnMainMenu());
+
+            GlobalServices.InstallSceneContext(_context);
         }
 
         private void OnGameState()

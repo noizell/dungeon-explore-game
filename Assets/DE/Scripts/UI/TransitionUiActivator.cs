@@ -20,7 +20,8 @@ namespace NPP.DE.Ui
         public virtual void PlayTransition(System.Action callback = null)
         {
             //gameObject.SetActive(true);
-            _animCallback = PersistentServices.Current.Get<TransitionManager>().AnimationCallbackFactory.Create();
+            //_animCallback = PersistentServices.Current.Get<TransitionManager>().AnimationCallbackFactory.Create();
+            _animCallback = new AnimationCallback();
             _animancer.Play(_clip).Events.OnEnd = callback;
         }
 

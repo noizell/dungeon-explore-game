@@ -2,17 +2,19 @@ using UnityEngine;
 using Zenject;
 using NPP.DE.Core.Signal;
 using NPP.DE.Ui;
+using NPP.DE.Core.Services;
 
 namespace NPP.DE.Core.Game
 {
-
-
     public class CoreManager : MonoBehaviour
     {
+        [SerializeField]
+        private SceneContext _context;
+
         private GameCounter _counter;
         private MenuManager _menuManager;
 
-        [Inject]
+        [Zenject.Inject]
         private void ConstructGameCounter(GameCounter counter)
         {
             _counter = counter;
@@ -30,9 +32,12 @@ namespace NPP.DE.Core.Game
 
         private void OnGameLoaded(GameLoadedParameter obj)
         {
+            GlobalServices.InstallSceneContext(_context);
+
             _counter.StartCount();
             _menuManager = obj.Menu;
             _menuManager.SetGameUi(true);
+
         }
     }
 }

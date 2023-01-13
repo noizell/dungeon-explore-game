@@ -28,7 +28,7 @@ namespace NPP.DE.Ui
             }
         }
 
-        private TransitionManager(params TransitionUiActivatorMember[] transitions)
+        public TransitionManager(params TransitionUiActivatorMember[] transitions)
         {
             _transitions = new Dictionary<string, TransitionUiActivator>();
             for (int i = 0; i < transitions.Length; i++)

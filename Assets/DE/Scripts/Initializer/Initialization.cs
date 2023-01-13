@@ -5,6 +5,7 @@ using NPP.DE.Core.Services;
 using NPP.DE.Core.Signal;
 using NPP.DE.Core.State;
 
+
 namespace NPP.DE.Init
 {
     public class Initialization
@@ -27,28 +28,26 @@ namespace NPP.DE.Init
 
             GlobalServices.GameStateTransition();
 
-            if (!_experiment)
-            {
-                _sceneLoader.LoadScene("Menu", () =>
-                {
-                    _container.Unbind<Initialization>();
-                    _sceneLoader.UnloadScene("Initializer");
-                },
-                UnityEngine.SceneManagement.LoadSceneMode.Additive);
-            }
+            _sceneLoader.LoadScene(!_experiment ? "Menu" : "_Experiment", () =>
+             {
+                 _container.Unbind<Initialization>();
+                 _sceneLoader.UnloadScene("Initializer");
+             },
+            UnityEngine.SceneManagement.LoadSceneMode.Additive);
+
         }
 
         #region Injection
-        [Inject]
+        [Zenject.Inject]
         private void InstallTransitionManager(IPersistent transitionManager)
             => PersistentServices.Current.Register(transitionManager as TransitionManager);
-        [Inject]
+        [Zenject.Inject]
         private void InstallSceneLoader(SceneLoader loader)
             => PersistentServices.Current.Register(loader);
-        [Inject]
+        [Zenject.Inject]
         private void InstallJSONLoader(JSONSerializer json)
             => PersistentServices.Current.Register(json);
-        [Inject]
+        [Zenject.Inject]
         private void InstallAssetLoader(AssetLoader json)
             => PersistentServices.Current.Register(json);
 

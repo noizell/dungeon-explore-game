@@ -2,13 +2,15 @@ using NPP.DE.Core.Character;
 using NPP.DE.Core.Dungeon.Generator;
 using NPP.DE.Core.Services;
 using NPP.DE.Misc;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
 public class DitherFade : MonoBehaviour
 {
+    //for test purpose only.
+    [SerializeField]
+    SceneContext _context;
+
     //for test purpose only.
     [SerializeField]
     MazeSettings _settings;
@@ -33,6 +35,8 @@ public class DitherFade : MonoBehaviour
 
     private void Start()
     {
+        GlobalServices.InstallSceneContext(_context);
+
         _maze.StartMaze(_settings);
 
         foreach (var t in GameObject.FindGameObjectsWithTag("Wall"))
