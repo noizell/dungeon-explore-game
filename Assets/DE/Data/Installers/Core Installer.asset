@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef185b7949c496840b1f01a991f7eb12, type: 3}
   m_Name: Core Installer
   m_EditorClassIdentifier: 
-  _experimentMode: 1
+  _experimentMode: 0
   _transitionList:
   - TransitionName: Left
     TransitionActivator: {fileID: 6987735985680408624, guid: f7f9b06d7f3b1ff44ba72522d43f67a8, type: 3}

@@ -6,24 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/DE/Scenes/Initializer.unity
+    path: Assets/DE/Scenes/Zenjects/Initializer.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/DE/Scenes/Menu.unity
-    guid: fa74941ac4d764848a03f65c631a01cc
-  - enabled: 1
-    path: Assets/DE/Scenes/Loading.unity
-    guid: 1e4d862a2e4d4eb4994cf39f762c1f29
-  - enabled: 1
-    path: Assets/DE/Scenes/Game.unity
+    path: Assets/DE/Scenes/Zenjects/Game.unity
     guid: c544853e54c5bb44297a2e9316d1052c
   - enabled: 1
-    path: Assets/Plugins/strangeioc-master/StrangeIoC/examples/Assets/scenes/multiplecontexts/game.unity
-    guid: 63cc202a6aefd4364ab9d942a24c0716
+    path: Assets/DE/Scenes/Zenjects/Loading.unity
+    guid: 1e4d862a2e4d4eb4994cf39f762c1f29
   - enabled: 1
-    path: Assets/Plugins/strangeioc-master/StrangeIoC/examples/Assets/scenes/multiplecontexts/main.unity
-    guid: c8ed8038df3b647b68e612bd6fde86e0
+    path: Assets/DE/Scenes/Zenjects/Menu.unity
+    guid: fa74941ac4d764848a03f65c631a01cc
   - enabled: 1
-    path: Assets/Plugins/strangeioc-master/StrangeIoC/examples/Assets/scenes/multiplecontexts/social.unity
-    guid: ca117a9bbd0d14ec294e0e9ae05a2103
+    path: Assets/DE/Scenes/Zenjects/_Experiment.unity
+    guid: 5148fdf1f04235344915171bc3e2b51c
   m_configObjects: {}

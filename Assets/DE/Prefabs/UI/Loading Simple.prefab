@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 6062747183679523685}
   - component: {fileID: 7971651620549054710}
   - component: {fileID: 2768413261184255885}
+  - component: {fileID: 2782980704684980542}
   m_Layer: 5
   m_Name: BG
   m_TagString: Untagged
@@ -186,6 +187,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Animator: {fileID: 7971651620549054710}
   _ActionOnDisable: 0
+--- !u!114 &2782980704684980542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6062747183679523704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 486c69818dffcd14f96ce64502516bbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6062747184491090388
 GameObject:
   m_ObjectHideFlags: 0
