@@ -232,6 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 304e1fcdb2a2c8c419d2039d6223764e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _context: {fileID: 1958793758}
   _settings: {fileID: 11400000, guid: dd0f662dbd53cee4297611a70f957aad, type: 2}
   _player: {fileID: 6280192366191810270, guid: 2784b99fe3d3aa14cb89083248862cd9, type: 3}
 --- !u!135 &423068091
@@ -415,11 +416,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers:
-  - {fileID: 11400000, guid: 58d7ec2726f63dd4c8bbeeb068196829, type: 2}
   - {fileID: 11400000, guid: a003db6beb5675741886b8ce6c811cf2, type: 2}
   _monoInstallers: []
   _installerPrefabs: []
-  _autoRun: 1
+  _autoRun: 0
   OnPreInstall:
     m_PersistentCalls:
       m_Calls: []

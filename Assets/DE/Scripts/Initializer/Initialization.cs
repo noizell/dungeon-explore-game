@@ -28,15 +28,13 @@ namespace NPP.DE.Init
 
             GlobalServices.GameStateTransition();
 
-            if (!_experiment)
-            {
-                _sceneLoader.LoadScene("Menu", () =>
-                {
-                    _container.Unbind<Initialization>();
-                    _sceneLoader.UnloadScene("Initializer");
-                },
-                UnityEngine.SceneManagement.LoadSceneMode.Additive);
-            }
+            _sceneLoader.LoadScene(!_experiment ? "Menu" : "_Experiment", () =>
+             {
+                 _container.Unbind<Initialization>();
+                 _sceneLoader.UnloadScene("Initializer");
+             },
+            UnityEngine.SceneManagement.LoadSceneMode.Additive);
+
         }
 
         #region Injection
